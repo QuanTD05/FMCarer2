@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "810054011446",
+    "firebase_url": "https://sof102-default-rtdb.firebaseio.com",
+    "project_id": "sof102",
+    "storage_bucket": "sof102.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810054011446:android:66f6e5ea53386f10756697",
+        "android_client_info": {
+          "package_name": "com.example.fmcarer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDFj8-wqO1kGoUzpTGMrji8uV8HiK28QQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810054011446:android:21732653985badec756697",
+        "android_client_info": {
+          "package_name": "fpoly.md19304.instagram"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDFj8-wqO1kGoUzpTGMrji8uV8HiK28QQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
