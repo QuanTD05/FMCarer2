@@ -1,11 +1,9 @@
 package com.example.fmcarer.Adapter;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -21,8 +19,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -35,7 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.example.fmcarer.CommentsActivity;
-import com.example.fmcarer.FollowersActivity;
 import com.example.fmcarer.Fragment.ProfileFragment;
 import com.example.fmcarer.Model.Post;
 import com.example.fmcarer.Model.User;
@@ -149,12 +144,7 @@ public class PostAdapted extends RecyclerView.Adapter<PostAdapted.ViewHolder> {
         holder.comment.setOnClickListener(commentClick);
         holder.comments.setOnClickListener(commentClick);
 
-        holder.likes.setOnClickListener(v -> {
-            Intent intent = new Intent(mContext, FollowersActivity.class);
-            intent.putExtra("id", post.getPostid());
-            intent.putExtra("title", "likes");
-            mContext.startActivity(intent);
-        });
+
 
         holder.more.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(mContext, v);

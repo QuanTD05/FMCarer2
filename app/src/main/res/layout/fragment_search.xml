@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/logo3"
+    android:background="@color/light_blue"
     tools:context=".Fragment.SearchFragment">
 
     <!-- Thanh tiêu đề tuỳ chỉnh -->
@@ -12,7 +12,7 @@
         android:id="@+id/customTitle"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="#66BB6A"
+        android:background="@color/blue_primary"
         android:gravity="center"
         android:text="Danh sách trẻ em"
         android:textColor="@android:color/white"
@@ -29,7 +29,8 @@
         android:orientation="vertical"
         android:padding="16dp"
         android:paddingBottom="72dp">
-        <!-- Ô tìm kiếm trong CardView cho đẹp -->
+
+        <!-- Ô tìm kiếm trong CardView -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Tìm kiếm theo email"
                 app:boxBackgroundMode="outline"
-                app:boxStrokeColor="#A5D6A7"
+                app:boxStrokeColor="@color/blue_primary"
                 app:boxCornerRadiusTopStart="12dp"
                 app:boxCornerRadiusTopEnd="12dp"
                 app:boxCornerRadiusBottomStart="12dp"
@@ -51,7 +52,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/searchEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/blue_text" />
             </com.google.android.material.textfield.TextInputLayout>
         </androidx.cardview.widget.CardView>
 
@@ -63,7 +65,6 @@
             android:layout_weight="1"
             android:clipToPadding="false"
             android:paddingBottom="16dp" />
-
     </LinearLayout>
 
     <!-- Floating Action Button -->
@@ -77,8 +78,7 @@
         android:layout_marginBottom="80dp"
         android:contentDescription="Thêm trẻ em"
         android:src="@drawable/ic_add"
-        app:backgroundTint="#66BB6A"
+        app:backgroundTint="@color/blue_primary"
         app:tint="@android:color/white" />
-
 
 </RelativeLayout>

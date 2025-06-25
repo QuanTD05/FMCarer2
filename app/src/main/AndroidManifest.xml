@@ -38,6 +38,9 @@
             android:name=".AddStoryActivity"
             android:exported="false" />
         <activity
+            android:name=".CareLogActivity"
+            android:exported="false" />
+        <activity
             android:name=".TintucActivity"
             android:exported="false" />
         <activity

@@ -5,99 +5,121 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#E3F2FD"
     tools:context=".StoryActivity">
 
+    <!-- Hình nền story -->
     <ImageView
+        android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/image"
-        android:src="@drawable/logo3"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop" />
+
+    <!-- View để bắt thao tác skip/reverse -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:id="@+id/skip"
-            />
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:id="@+id/reverse"
-            />
 
+        <View
+            android:id="@+id/skip"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <View
+            android:id="@+id/reverse"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
     </LinearLayout>
+
+    <!-- Progress story -->
     <jp.shts.android.storiesprogressview.StoriesProgressView
+        android:id="@+id/stories"
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:id="@+id/stories"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
         android:layout_marginTop="8dp"
-        />
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp" />
+
+    <!-- Ảnh đại diện và tên -->
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/stories"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:background="#802196F3"
+        android:padding="6dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginEnd="10dp"
+        android:layout_centerVertical="false"
+        android:elevation="2dp"
+        android:layout_alignParentLeft="true">
+
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/story_photo"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:id="@+id/story_photo"/>
+            android:layout_centerVertical="true" />
+
         <TextView
+            android:id="@id/story_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="username"
             android:textStyle="bold"
-            android:textColor="#fff"
+            android:textColor="#FFFFFF"
             android:textSize="15sp"
-            android:id="@id/story_username"
             android:layout_centerVertical="true"
-            android:layout_margin="5dp"
-            android:layout_toEndOf="@+id/story_photo"/>
+            android:layout_marginStart="6dp"
+            android:layout_toEndOf="@+id/story_photo" />
     </RelativeLayout>
 
+    <!-- Số lượt xem -->
     <LinearLayout
+        android:id="@+id/r_seen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:id="@+id/r_seen"
-        android:background="#20000000"
-        android:padding="3dp"
+        android:background="#802196F3"
+        android:padding="6dp"
         android:layout_margin="10dp">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/baseline_visibility_24"/>
+            android:src="@drawable/baseline_visibility_24"
+             />
+
         <TextView
+            android:id="@+id/seen_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
-            android:layout_marginStart="5dp"
             android:textStyle="bold"
-            android:textSize="16dp"
-            android:layout_gravity="center"
-            android:id="@+id/seen_number"
-            android:textColor="#fff"/>
-
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginStart="5dp"
+            android:layout_gravity="center" />
     </LinearLayout>
+
+    <!-- Nút xóa -->
     <ImageView
+        android:id="@+id/story_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/story_delete"
+
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="10dp"
-        android:padding="3dp"
-        android:id="@+id/story_delete"
-        android:background="#20000000"/>
-
+        android:padding="6dp"
+        android:background="#802196F3" />
 
 </RelativeLayout>

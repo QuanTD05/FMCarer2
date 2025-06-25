@@ -6,130 +6,148 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/logo3"
+    android:background="#E3F2FD"
     tools:context=".PostActivity">
 
+    <!-- Toolbar -->
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/bar"
-        android:background="?android:attr/windowBackground">
+        android:background="@color/colorPrimary">
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/windowBackground"
-            android:padding="8dp">
-
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:elevation="4dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
+
                 <ImageView
+                    android:id="@+id/close"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:src="@drawable/ic_closes"
-                    android:id="@+id/close"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Đăng"
-                    android:id="@+id/post"
-                    android:textSize="16sp"
-                    android:layout_marginEnd="10dp"
                     android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_closes"
+                    android:contentDescription="Đóng"
+                    android:tint="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:textColor="@color/colorPrimary"/>
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:text="Đăng"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
 
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <!-- Nội dung bài đăng -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
         android:orientation="vertical"
-        >
+        android:padding="16dp"
+        android:background="@android:color/white"
+        android:elevation="4dp">
+
         <EditText
+            android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:hint="Hôm nay bạn nghỉ gì?"
+            android:hint="Hôm nay bạn nghĩ gì?"
             android:maxLines="5"
-            android:id="@+id/description"/>
+            android:minLines="3"
+            android:background="@android:color/transparent"
+            android:textSize="16sp"
+            android:textColor="#2C5079" />
+
         <ImageView
+            android:id="@+id/image_added"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:scaleType="centerInside"
-            android:src="@mipmap/ic_launcher"
-            android:id="@+id/image_added"/>
+            android:layout_marginTop="12dp"
+            android:scaleType="centerCrop"
+            android:background="#F0F0F0"
+            android:src="@drawable/ic_bmi_gauge" />
+
+        <!-- Nút chọn ảnh / chụp ảnh -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="16dp">
+            android:gravity="center">
 
+            <!-- Chọn ảnh -->
             <LinearLayout
                 android:id="@+id/buttonSelectImage"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center"
+                android:padding="8dp">
 
                 <ImageView
                     android:id="@+id/imageViewSelectImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/ic_image_24"
-                    android:contentDescription="Select Image"
-                    android:padding="8dp"/>
+                    android:tint="#2C5079"
+                    android:contentDescription="Chọn ảnh" />
 
                 <TextView
                     android:id="@+id/textViewAddImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:text="Ảnh"
                     android:textSize="16sp"
-                    android:textColor="@android:color/black"
-                    android:layout_marginStart="8dp"
-                    android:layout_gravity="center_vertical"/>
+                    android:textColor="#2C5079" />
             </LinearLayout>
 
+            <!-- Chụp ảnh -->
             <LinearLayout
                 android:id="@+id/buttonTakePhoto"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center"
+                android:padding="8dp">
 
                 <ImageView
                     android:id="@+id/imageViewTakePhoto"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/ic_camera_alt_24"
-                    android:contentDescription="Take Photo"
-                    android:padding="8dp"/>
+                    android:tint="#2C5079"
+                    android:contentDescription="Chụp ảnh" />
 
                 <TextView
                     android:id="@+id/textViewAddCamera"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:text="Camera"
                     android:textSize="16sp"
-                    android:textColor="@android:color/black"
-                    android:layout_marginStart="8dp"
-                    android:layout_gravity="center_vertical"/>
+                    android:textColor="#2C5079" />
             </LinearLayout>
-
-
         </LinearLayout>
 
-
     </LinearLayout>
-
 </LinearLayout>

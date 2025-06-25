@@ -130,16 +130,7 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
         });
         skip.setOnTouchListener(onTouchListener);
 
-        r_seen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(StoryActivity.this, FollowersActivity.class);
-                intent.putExtra("id", userid);
-                intent.putExtra("storyid", storyids.get(counter));
-                intent.putExtra("title","views");
-                startActivity(intent);
-            }
-        });
+
 
         story_delete.setOnClickListener(new View.OnClickListener() {
             @Override

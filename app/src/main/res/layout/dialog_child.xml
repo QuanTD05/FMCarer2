@@ -1,37 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="20dp">
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="#E3F2FD">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@android:color/white"
+        android:elevation="3dp"
+        android:layout_margin="8dp"
+        android:clipToPadding="false"
+        android:backgroundTint="#FFFFFF">
 
+        <!-- Họ và tên -->
         <EditText
             android:id="@+id/edtName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Họ và tên" />
+            android:hint="Họ và tên"
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="#90CAF9"
+            android:textColorHint="#607D8B" />
 
+        <!-- Ngày sinh -->
         <EditText
             android:id="@+id/edtBirthday"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Ngày sinh (dd/MM/yyyy)" />
+            android:hint="Ngày sinh (dd/MM/yyyy)"
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="#90CAF9"
+            android:textColorHint="#607D8B"
+            android:inputType="date" />
 
+        <!-- Giới tính -->
         <EditText
             android:id="@+id/edtGender"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Giới tính" />
+            android:hint="Giới tính"
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="#90CAF9"
+            android:textColorHint="#607D8B" />
 
+        <!-- Địa chỉ -->
         <EditText
             android:id="@+id/edtAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Địa chỉ" />
+            android:hint="Địa chỉ"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#90CAF9"
+            android:textColorHint="#607D8B"
+            android:inputType="textPostalAddress" />
+
+        <!-- Ảnh đại diện -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ảnh đại diện:"
+            android:textStyle="bold"
+            android:textColor="#2C5079"
+            android:layout_marginBottom="8dp" />
 
         <ImageView
             android:id="@+id/imgPick"
@@ -40,8 +74,10 @@
             android:scaleType="centerCrop"
             android:src="@drawable/ic_grid"
             android:contentDescription="Ảnh đại diện trẻ"
-            android:background="@android:color/darker_gray"
+            android:background="#CFD8DC"
             android:clickable="true"
-            android:focusable="true" />
+            android:focusable="true"
+            android:layout_marginBottom="16dp"
+            android:foreground="?android:attr/selectableItemBackground" />
     </LinearLayout>
 </ScrollView>

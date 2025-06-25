@@ -1,22 +1,22 @@
 package com.example.fmcarer;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.example.fmcarer.Model.Child;
+import com.example.fmcarer.Reminder;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,7 @@ import java.util.List;
 public class CareLogActivity extends AppCompatActivity {
     private LinearLayout logContainer;
     private String currentUserId;
+    private String filterChildId = null;
     private List<Child> childList = new ArrayList<>();
 
     @Override
@@ -34,7 +35,20 @@ public class CareLogActivity extends AppCompatActivity {
         logContainer = findViewById(R.id.logContainer);
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+        // Nhận childId từ Intent
+        filterChildId = getIntent().getStringExtra("childId");
+
         loadChildrenAndReminders();
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Nhật ký chăm sóc");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void loadChildrenAndReminders() {
@@ -67,7 +81,11 @@ public class CareLogActivity extends AppCompatActivity {
                     Reminder reminder = snap.getValue(Reminder.class);
                     if (reminder == null) continue;
 
-                    // Tìm tên trẻ
+                    // Lọc theo childId nếu được truyền vào
+                    if (filterChildId != null && !filterChildId.equals(reminder.childId)) {
+                        continue;
+                    }
+
                     String childName = "Không rõ";
                     for (Child c : childList) {
                         if (c.getChildId().equals(reminder.childId)) {
@@ -76,17 +94,49 @@ public class CareLogActivity extends AppCompatActivity {
                         }
                     }
 
-                    TextView tv = new TextView(CareLogActivity.this);
-                    tv.setText("👶 " + childName + "\n📌 " + reminder.title + "\n🕒 " + reminder.time);
-                    tv.setPadding(20, 20, 20, 20);
-                    tv.setBackground(ContextCompat.getDrawable(CareLogActivity.this, R.drawable.reminder_card));
-                    tv.setTextColor(Color.BLACK);
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    params.setMargins(0, 0, 0, 30);
-                    tv.setLayoutParams(params);
+                    LinearLayout card = new LinearLayout(CareLogActivity.this);
+                    card.setOrientation(LinearLayout.VERTICAL);
+                    card.setPadding(32, 32, 32, 32);
+                    card.setBackground(ContextCompat.getDrawable(CareLogActivity.this, R.drawable.reminder_card));
 
-                    logContainer.addView(tv);
+                    LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    cardParams.setMargins(0, 0, 0, 30);
+                    card.setLayoutParams(cardParams);
+
+                    TextView content = new TextView(CareLogActivity.this);
+                    content.setText("👶 " + childName +
+                            "\n📌 " + reminder.title +
+                            "\n🕒 " + reminder.time +
+                            (reminder.isRepeat ? "\n🔁 Lặp: " + reminder.repeatType : ""));
+                    content.setTextSize(16);
+                    content.setTextColor(Color.BLACK);
+                    card.addView(content);
+
+                    TextView editBtn = new TextView(CareLogActivity.this);
+                    editBtn.setText("✏️ Sửa");
+                    editBtn.setTextColor(Color.BLUE);
+                    editBtn.setPadding(0, 16, 0, 0);
+                    editBtn.setOnClickListener(v -> {
+                        Intent i = new Intent(CareLogActivity.this, ReminderActivity.class);
+                        i.putExtra("reminderId", reminder.reminderId);
+                        startActivity(i);
+                    });
+                    card.addView(editBtn);
+
+                    TextView deleteBtn = new TextView(CareLogActivity.this);
+                    deleteBtn.setText("🗑️ Xoá");
+                    deleteBtn.setTextColor(Color.RED);
+                    deleteBtn.setPadding(0, 8, 0, 16);
+                    deleteBtn.setOnClickListener(v -> {
+                        FirebaseDatabase.getInstance().getReference("reminders")
+                                .child(reminder.reminderId)
+                                .removeValue();
+                        logContainer.removeView(card);
+                    });
+                    card.addView(deleteBtn);
+
+                    logContainer.addView(card);
                 }
             }
 

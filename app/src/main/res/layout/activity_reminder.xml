@@ -3,81 +3,121 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="#E8F5E9"> <!-- Nền xanh lá rất nhạt -->
+    android:background="#E3F2FD">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
+        android:padding="20dp"
         android:background="#FFFFFF"
-        android:elevation="2dp"
-        android:layout_margin="8dp"
+        android:elevation="4dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:clipToPadding="false"
-        android:layout_gravity="center">
+        android:backgroundTint="#FFFFFF">
+
+        <!-- Tên trẻ -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Trẻ được nhắc:"
+            android:textStyle="bold"
+            android:textColor="#1565C0" />
 
         <Spinner
             android:id="@+id/spinnerChildren"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:layout_marginBottom="16dp"
-            android:backgroundTint="#A5D6A7"
-            android:prompt="@string/select_child" />
+            android:enabled="false"
+            android:backgroundTint="#BBDEFB" />
 
-        <EditText
-            android:id="@+id/edtTitle"
+        <!-- Tiêu đề -->
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Tiêu đề nhắc nhở (ăn, ngủ...)"
-            android:inputType="textCapSentences"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="#A5D6A7" />
+            android:text="Tiêu đề nhắc:"
+            android:textStyle="bold"
+            android:textColor="#1565C0" />
+
+        <Spinner
+            android:id="@+id/spinnerTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:backgroundTint="#BBDEFB" />
+
+        <!-- Mô tả -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mô tả chi tiết:"
+            android:textStyle="bold"
+            android:textColor="#1565C0"
+            android:layout_marginTop="12dp" />
 
         <EditText
             android:id="@+id/edtDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Mô tả"
+            android:hint="Ví dụ: Uống thuốc sau bữa sáng"
             android:inputType="textMultiLine"
             android:minLines="3"
             android:gravity="top"
-            android:layout_marginTop="12dp"
-            android:backgroundTint="#A5D6A7" />
+            android:backgroundTint="#BBDEFB"
+            android:layout_marginTop="4dp" />
+
+        <!-- Thời gian -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thời gian:"
+            android:textStyle="bold"
+            android:textColor="#1565C0"
+            android:layout_marginTop="12dp" />
 
         <EditText
             android:id="@+id/edtTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Thời gian (ví dụ: 08:00)"
-            android:inputType="time"
-            android:layout_marginTop="12dp"
-            android:backgroundTint="#A5D6A7" />
+            android:hint="Chọn thời gian"
+            android:focusable="false"
+            android:backgroundTint="#BBDEFB"
+            android:layout_marginTop="4dp" />
 
+        <!-- Checkbox -->
         <CheckBox
             android:id="@+id/chkRepeat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Lặp lại"
             android:layout_marginTop="16dp"
-            android:buttonTint="#66BB6A" /> <!-- Xanh lá trung bình -->
+            android:buttonTint="#42A5F5"
+        android:textColor="#1565C0" />
 
-        <EditText
-            android:id="@+id/edtRepeatType"
+        <!-- Spinner kiểu lặp -->
+        <Spinner
+            android:id="@+id/spinnerRepeatType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Kiểu lặp lại (ví dụ: Hàng ngày)"
-            android:inputType="text"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="#A5D6A7" />
+            android:layout_marginTop="4dp"
+            android:backgroundTint="#BBDEFB"
+            android:visibility="visible" />
 
+        <!-- Nút lưu -->
         <Button
             android:id="@+id/btnSaveReminder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Lưu nhắc lịch"
-            android:layout_marginTop="20dp"
-            android:backgroundTint="#66BB6A"
-            android:textColor="#FFFFFF" />
+            android:layout_marginTop="24dp"
+            android:backgroundTint="#42A5F5"
+        android:textColor="#FFFFFF"
+        android:textAllCaps="false"
+        android:textSize="16sp" />
     </LinearLayout>
 </ScrollView>

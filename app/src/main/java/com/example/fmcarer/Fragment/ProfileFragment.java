@@ -791,7 +791,6 @@ import java.util.List;
 
 import com.example.fmcarer.Adapter.MyFotoAdapter;
 import com.example.fmcarer.EditProfileActivity;
-import com.example.fmcarer.FollowersActivity;
 import com.example.fmcarer.Model.Post;
 import com.example.fmcarer.Model.User;
 import com.example.fmcarer.OptionsActivity;
@@ -904,24 +903,8 @@ public class ProfileFragment extends Fragment {
             recyclerViewSave.setVisibility(View.VISIBLE);
         });
 
-        followers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), FollowersActivity.class);
-                intent.putExtra("id",profileId);
-                intent.putExtra("title", "followers");
-                startActivity(intent);
-            }
-        });
-        following.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), FollowersActivity.class);
-                intent.putExtra("id",profileId);
-                intent.putExtra("title", "following");
-                startActivity(intent);
-            }
-        });
+
+
 
         return view;
     }

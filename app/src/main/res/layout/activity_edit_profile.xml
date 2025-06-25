@@ -6,100 +6,147 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/logo3"
+    android:background="#E3F2FD"
     tools:context=".EditProfileActivity">
+
+    <!-- Toolbar -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/bar"
-        android:background="?android:attr/windowBackground">
+        android:background="#BBDEFB"
+        android:elevation="4dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/windowBackground"
-            android:padding="8dp">
+            android:layout_height="?attr/actionBarSize"
+            android:background="#BBDEFB"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                
+                android:layout_height="match_parent">
+
                 <ImageView
+                    android:id="@+id/close"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_closes"
                     android:layout_centerVertical="true"
                     android:layout_alignParentStart="true"
-                    android:id="@+id/close"/>
+                    android:padding="8dp" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Chỉnh sửa trang cá nhân"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="10dp"
-                    android:textStyle="bold"
                     android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#0D47A1"
                     android:layout_toEndOf="@id/close"
-                    />
-
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp" />
 
                 <TextView
+                    android:id="@+id/save"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Lưu"
-                    android:layout_marginRight="10dp"
-                    android:id="@+id/save"
                     android:textSize="16sp"
-                    android:layout_centerVertical="true"
+                    android:textColor="#0D47A1"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"/>
+                    android:layout_centerVertical="true"
+                    android:padding="8dp"
+                    android:layout_marginEnd="8dp" />
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-
+    <!-- Nội dung -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="16dp"
+        android:background="#FFFFFF"
+        android:elevation="2dp"
+        android:layout_margin="16dp"
+        android:clipToPadding="false"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center"
-            android:src="@mipmap/ic_launcher"
             android:id="@+id/image_profile"
-            android:layout_margin="10dp"/>
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_marginTop="12dp" />
 
         <TextView
+            android:id="@+id/tv_change"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Thay đổi ảnh đại diện"
-            android:textSize="16sp"
-            android:layout_gravity="center"
-            android:id="@+id/tv_change"/>
+            android:textSize="15sp"
+            android:textColor="#1E88E5"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/fullname"
-            android:hint="Họ và tên"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="12dp"
+            app:boxCornerRadiusTopStart="10dp"
+            app:boxCornerRadiusTopEnd="10dp"
+            app:boxCornerRadiusBottomStart="10dp"
+            app:boxCornerRadiusBottomEnd="10dp"
+            app:boxBackgroundColor="#FAFAFA">
 
-        <com.google.android.material.textfield.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/fullname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Họ và tên"
+                android:textColor="#000000" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/username"
-            android:hint="UserName"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="12dp"
+            app:boxCornerRadiusTopStart="10dp"
+            app:boxCornerRadiusTopEnd="10dp"
+            app:boxCornerRadiusBottomStart="10dp"
+            app:boxCornerRadiusBottomEnd="10dp"
+            app:boxBackgroundColor="#FAFAFA">
 
-        <com.google.android.material.textfield.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tên người dùng"
+                android:textColor="#000000" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/bio"
-            android:hint="Bio"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="12dp"
+            app:boxCornerRadiusTopStart="10dp"
+            app:boxCornerRadiusTopEnd="10dp"
+            app:boxCornerRadiusBottomStart="10dp"
+            app:boxCornerRadiusBottomEnd="10dp"
+            app:boxBackgroundColor="#FAFAFA">
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/bio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Giới thiệu bản thân"
+                android:textColor="#000000" />
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 </LinearLayout>

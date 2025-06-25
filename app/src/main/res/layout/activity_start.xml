@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:id="@+id/main"
-    android:background="@drawable/logo4"
-    android:padding="16dp">
+    android:padding="24dp"
+    android:background="#E3F2FD">
 
-
+    <!-- Điều khoản dịch vụ -->
     <TextView
         android:id="@+id/tvTermsOfService"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Điều khoản dịch vụ"
-        android:textColor="@color/white"
-        android:paddingTop="8dp"
-        android:textSize="14sp" />
+        android:textColor="#1565C0"
+        android:textSize="14sp"
+        android:layout_gravity="end"
+        android:paddingBottom="8dp" />
 
-
+    <!-- Nội dung chính -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -26,14 +27,13 @@
         android:orientation="vertical"
         android:gravity="center">
 
-
+        <!-- Ảnh + Chào mừng -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
-
+            android:layout_marginBottom="24dp">
 
             <ImageView
                 android:id="@+id/imgProfile"
@@ -45,49 +45,52 @@
                 android:contentDescription="@string/profile_image"
                 android:src="@drawable/logota" />
 
-
-
             <TextView
                 android:id="@+id/tvWelcome"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Chào mừng bạn đến với FMCarer"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textColor="#1565C0"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:lineSpacingExtra="4dp"/>
         </LinearLayout>
 
-
+        <!-- Mô tả phụ -->
         <TextView
             android:id="@+id/tvSubText"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Hãy đưa việc luyện tập sức khoẻ của bạn lên một tầng cao mới!"
-            android:textColor="@color/black"
+            android:textColor="#455A64"
             android:textSize="16sp"
-            android:gravity="left"
-            android:layout_marginBottom="24dp"/>
+            android:gravity="center"
+            android:layout_marginBottom="32dp" />
     </LinearLayout>
 
-
+    <!-- Nút tiếp tục -->
     <Button
         android:id="@+id/btnContinue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Tiếp tục"
-        android:backgroundTint="#00C853"
+        android:backgroundTint="#42A5F5"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
-        android:layout_marginBottom="16dp" />
+        android:textAllCaps="false"
+        android:layout_marginBottom="12dp" />
 
-
+    <!-- Điều khoản sử dụng -->
     <TextView
         android:id="@+id/tvPrivacyNotice"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tôi đồng ý các điều khoản sử dụng và chính sách quyền riêng tư khi sử dụng ứng dụng"
-        android:textColor="@color/white"
-        android:textSize="14sp"
+        android:text="Tôi đồng ý với Điều khoản sử dụng và Chính sách quyền riêng tư khi sử dụng ứng dụng"
+        android:textColor="#1565C0"
+        android:textSize="13sp"
         android:gravity="center"
-        android:layout_marginBottom="16dp" />
+        android:lineSpacingExtra="4dp"
+        android:layout_marginBottom="8dp" />
+
 </LinearLayout>

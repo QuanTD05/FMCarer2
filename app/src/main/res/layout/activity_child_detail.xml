@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E8F5E9"
+    android:background="#E3F2FD"
     android:padding="10dp">
 
     <LinearLayout
@@ -10,11 +10,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
-        android:background="#FFFFFF"
-        android:elevation="2dp"
+        android:background="@drawable/bg_card_blue"
+        android:elevation="4dp"
         android:layout_margin="8dp"
-        android:clipToPadding="false"
-        android:backgroundTint="#FFFFFF">
+        android:clipToPadding="false">
 
         <!-- Ảnh đại diện -->
         <ImageView
@@ -24,7 +23,8 @@
             android:layout_gravity="center"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_cam"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_image_circle" />
 
         <!-- Tên Trẻ -->
         <TextView
@@ -34,11 +34,12 @@
             android:text="Tên Trẻ"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="#2E7D32"
+            android:textColor="#0D47A1"
             android:padding="12dp"
-            android:background="#C8E6C9"
             android:gravity="center"
-            android:layout_marginBottom="12dp" />
+            android:background="#BBDEFB"
+            android:layout_marginBottom="12dp"
+            android:backgroundTintMode="src_in" />
 
         <!-- Thông tin chi tiết -->
         <TextView
@@ -47,6 +48,7 @@
             android:layout_height="wrap_content"
             android:text="Tuổi: "
             android:textSize="16sp"
+            android:textColor="#1A237E"
             android:layout_marginBottom="4dp" />
 
         <TextView
@@ -55,6 +57,7 @@
             android:layout_height="wrap_content"
             android:text="Giới tính: "
             android:textSize="16sp"
+            android:textColor="#1A237E"
             android:layout_marginBottom="4dp" />
 
         <TextView
@@ -63,6 +66,7 @@
             android:layout_height="wrap_content"
             android:text="Ngày sinh: "
             android:textSize="16sp"
+            android:textColor="#1A237E"
             android:layout_marginBottom="4dp" />
 
         <TextView
@@ -71,6 +75,7 @@
             android:layout_height="wrap_content"
             android:text="Địa chỉ: "
             android:textSize="16sp"
+            android:textColor="#1A237E"
             android:layout_marginBottom="12dp" />
 
         <!-- Khu vực các nút chức năng -->
@@ -79,12 +84,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="8dp"
-            android:elevation="3dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/bg_card_rounded">
+            android:background="@drawable/bg_card_rounded_blue"
+            android:elevation="3dp">
 
-            <!-- Lịch nhắc -->
+            <!-- Mỗi mục sử dụng màu xanh nước biển và icon hiện đại -->
             <LinearLayout
                 android:id="@+id/btnReminder"
                 android:layout_width="match_parent"
@@ -100,7 +105,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_grid"
-                    android:tint="#4CAF50"
+
                     android:layout_marginEnd="12dp" />
 
                 <TextView
@@ -108,10 +113,9 @@
                     android:layout_height="wrap_content"
                     android:text="Lịch nhắc"
                     android:textSize="16sp"
-                    android:textColor="#000000" />
+                    android:textColor="#0D47A1" />
             </LinearLayout>
 
-            <!-- Nhật ký -->
             <LinearLayout
                 android:id="@+id/btnDiary"
                 android:layout_width="match_parent"
@@ -127,7 +131,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_diary"
-                    android:tint="#4CAF50"
+
                     android:layout_marginEnd="12dp" />
 
                 <TextView
@@ -135,10 +139,9 @@
                     android:layout_height="wrap_content"
                     android:text="Nhật ký chăm sóc"
                     android:textSize="16sp"
-                    android:textColor="#000000" />
+                    android:textColor="#0D47A1" />
             </LinearLayout>
 
-            <!-- Chỉnh sửa -->
             <LinearLayout
                 android:id="@+id/btnEdit"
                 android:layout_width="match_parent"
@@ -154,7 +157,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_edit1"
-                    android:tint="#4CAF50"
+
                     android:layout_marginEnd="12dp" />
 
                 <TextView
@@ -162,7 +165,7 @@
                     android:layout_height="wrap_content"
                     android:text="Chỉnh sửa thông tin"
                     android:textSize="16sp"
-                    android:textColor="#000000" />
+                    android:textColor="#0D47A1" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
