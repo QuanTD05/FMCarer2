@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText email, password;
     Button login;
     TextView txt_signup, txtForgot;
+    RadioGroup roleGroup;
     FirebaseAuth auth;
 
     @Override
@@ -34,7 +37,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Apply window insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -46,55 +48,84 @@ public class LoginActivity extends AppCompatActivity {
         login = findViewById(R.id.login);
         txt_signup = findViewById(R.id.txt_signup);
         txtForgot = findViewById(R.id.txtForgot);
+        roleGroup = findViewById(R.id.roleGroup);
         auth = FirebaseAuth.getInstance();
 
         txt_signup.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
-
         txtForgot.setOnClickListener(v -> showForgotPasswordDialog());
 
         login.setOnClickListener(v -> {
             ProgressDialog pd = new ProgressDialog(LoginActivity.this);
-            pd.setMessage("Please wait...");
+            pd.setMessage("Đang kiểm tra thông tin...");
+            pd.setCancelable(false);
             pd.show();
 
-            String str_email = email.getText().toString();
-            String str_password = password.getText().toString();
+            String str_email = email.getText().toString().trim();
+            String str_password = password.getText().toString().trim();
 
-            if (TextUtils.isEmpty(str_password) || TextUtils.isEmpty(str_email)) {
-                Toast.makeText(LoginActivity.this, "Tất cả các trường đều bắt buộc!", Toast.LENGTH_SHORT).show();
+            int selectedId = roleGroup.getCheckedRadioButtonId();
+            if (selectedId == -1) {
+                Toast.makeText(this, "Vui lòng chọn loại tài khoản!", Toast.LENGTH_SHORT).show();
                 pd.dismiss();
-            } else {
-                login.setEnabled(false);
-                auth.signInWithEmailAndPassword(str_email, str_password)
-                        .addOnCompleteListener(LoginActivity.this, task -> {
-                            if (task.isSuccessful()) {
-                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
-                                        .child("Users").child(auth.getCurrentUser().getUid());
-
-                                reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        pd.dismiss();
-                                        Intent intent = new Intent(LoginActivity.this, MainActivity3.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-                                        pd.dismiss();
-                                        login.setEnabled(true); // Re-enable button on error
-                                    }
-                                });
-                            } else {
-                                pd.dismiss();
-                                String errorMessage = task.getException().getMessage();
-                                Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-                                login.setEnabled(true); // Re-enable button on error
-                            }
-                        });
+                return;
             }
+
+            RadioButton selectedRoleButton = findViewById(selectedId);
+            String userRole = selectedRoleButton.getTag().toString(); // staff hoặc user
+
+            if (TextUtils.isEmpty(str_email) || TextUtils.isEmpty(str_password)) {
+                Toast.makeText(this, "Vui lòng nhập đầy đủ email và mật khẩu!", Toast.LENGTH_SHORT).show();
+                pd.dismiss();
+                return;
+            }
+
+            login.setEnabled(false);
+
+            auth.signInWithEmailAndPassword(str_email, str_password)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            String uid = auth.getCurrentUser().getUid();
+                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(uid);
+
+                            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    pd.dismiss();
+                                    login.setEnabled(true);
+
+                                    if (snapshot.exists()) {
+                                        String roleInDb = snapshot.child("role").getValue(String.class);
+                                        if (roleInDb != null && roleInDb.equals(userRole)) {
+                                            // Đúng vai trò
+                                            if (userRole.equals("main")) {
+                                                startActivity(new Intent(LoginActivity.this, MainActivity3.class));
+                                            } else {
+                                                startActivity(new Intent(LoginActivity.this, SubMainActivity.class));
+                                            }
+                                            finish();
+                                        } else {
+                                            auth.signOut();
+                                            Toast.makeText(LoginActivity.this, "Sai loại tài khoản!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        Toast.makeText(LoginActivity.this, "Không tìm thấy thông tin người dùng!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    pd.dismiss();
+                                    login.setEnabled(true);
+                                    Toast.makeText(LoginActivity.this, "Lỗi truy cập dữ liệu!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                        } else {
+                            pd.dismiss();
+                            login.setEnabled(true);
+                            Toast.makeText(LoginActivity.this, "Sai email hoặc mật khẩu!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
         });
     }
 

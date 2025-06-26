@@ -71,6 +71,32 @@ app:cardBackgroundColor="@android:color/white">
         android:padding="12dp"
         android:textColor="#000000"
         android:textSize="15sp" />
+    <RadioGroup
+        android:id="@+id/roleGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="12dp">
+
+
+        <RadioButton
+            android:id="@+id/rb_staff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tài khoản chính"
+            android:tag="main"
+            android:layout_marginStart="16dp" />
+
+        <RadioButton
+            android:id="@+id/rb_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tài khoản phụ"
+            android:tag="child"
+            android:layout_marginStart="16dp" />
+    </RadioGroup>
+
 
     <!-- Nút đăng nhập -->
     <com.google.android.material.button.MaterialButton

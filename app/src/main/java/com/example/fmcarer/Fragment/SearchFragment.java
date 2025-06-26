@@ -38,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -54,9 +55,12 @@ public class SearchFragment extends Fragment {
 
     private TextView txtBalance;
     private int balance = 0;
+    private String phuHuynhEmail;
+    private String phuHuynhPassword;
+
 
     private static final int REQUEST_NAP_TIEN = 1001;
-    private static final int CHILD_COST = 10000; // Ví dụ: 10,000 VNĐ để thêm trẻ thứ 2+
+    private static final int CHILD_COST = 10000;
 
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -78,11 +82,13 @@ public class SearchFragment extends Fragment {
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         dbRef = FirebaseDatabase.getInstance().getReference("children");
 
+
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         childList = new ArrayList<>();
         adapter = new ChildAdapter(getContext(), childList);
         recyclerView.setAdapter(adapter);
+
         loadChildren();
 
         fabAdd = view.findViewById(R.id.fabAdd);
@@ -115,31 +121,21 @@ public class SearchFragment extends Fragment {
                     }
 
                     @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                    }
+                    public void onCancelled(@NonNull DatabaseError error) { }
                 });
     }
 
     private void showAddDialog() {
-        if (childList.size() >= 1 && balance < CHILD_COST) {
-            new AlertDialog.Builder(getContext())
-                    .setTitle("Cần nạp tiền")
-                    .setMessage("Bạn đã thêm 1 trẻ miễn phí. Để thêm trẻ tiếp theo, bạn cần nạp ít nhất " + CHILD_COST + " VNĐ. Bạn có muốn nạp tiền không?")
-                    .setPositiveButton("Nạp tiền", (dialog, which) -> {
-                        Intent intent = new Intent(getActivity(), DepositActivity.class);
-                        startActivityForResult(intent, REQUEST_NAP_TIEN);
-                    })
-                    .setNegativeButton("Hủy", null)
-                    .show();
-            return;
-        }
-
         selectedImageUri = null;
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_child, null);
+
         EditText edtName = view.findViewById(R.id.edtName);
         EditText edtBirthday = view.findViewById(R.id.edtBirthday);
         EditText edtGender = view.findViewById(R.id.edtGender);
         EditText edtAddress = view.findViewById(R.id.edtAddress);
+        EditText edtEmail = view.findViewById(R.id.edtEmail);
+        EditText edtPassword = view.findViewById(R.id.edtPassword);
+        EditText edtParentPassword = view.findViewById(R.id.edtParentPassword); // THÊM TRƯỜNG NÀY TRONG XML
         imgPreview = view.findViewById(R.id.imgPick);
 
         imgPreview.setOnClickListener(v -> {
@@ -148,48 +144,111 @@ public class SearchFragment extends Fragment {
             imagePickerLauncher.launch(intent);
         });
 
-        new AlertDialog.Builder(getContext())
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
                 .setTitle("Thêm trẻ")
                 .setView(view)
-                .setPositiveButton("Lưu", (dialog, which) -> {
-                    String id = dbRef.push().getKey();
-                    String name = edtName.getText().toString().trim();
-                    String birthdate = edtBirthday.getText().toString().trim();
-                    String gender = edtGender.getText().toString().trim();
-                    String address = edtAddress.getText().toString().trim();
-                    int age = calculateAgeFromBirthdate(birthdate);
-
-                    if (id == null || name.isEmpty() || birthdate.isEmpty()) {
-                        Toast.makeText(getContext(), "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    Child child = new Child(id, name, age, gender, birthdate, address, "");
-                    child.setUserId(currentUserId);
-
-                    if (selectedImageUri != null) {
-                        FirebaseStorage.getInstance().getReference("child_images")
-                                .child(id + ".jpg")
-                                .putFile(selectedImageUri)
-                                .addOnSuccessListener(taskSnapshot ->
-                                        taskSnapshot.getStorage().getDownloadUrl()
-                                                .addOnSuccessListener(uri -> {
-                                                    child.setImageUrl(uri.toString());
-                                                    dbRef.child(id).setValue(child);
-                                                }));
-                    } else {
-                        dbRef.child(id).setValue(child);
-                    }
-
-                    if (childList.size() >= 1) {
-                        balance -= CHILD_COST;
-                        updateBalanceUI();
-                        Toast.makeText(getContext(), "Đã trừ " + CHILD_COST + " VNĐ để thêm trẻ.", Toast.LENGTH_SHORT).show();
-                    }
-                })
+                .setPositiveButton("Lưu", null)
                 .setNegativeButton("Hủy", null)
-                .show();
+                .create();
+
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            String name = edtName.getText().toString().trim();
+            String birthdate = edtBirthday.getText().toString().trim();
+            String gender = edtGender.getText().toString().trim();
+            String address = edtAddress.getText().toString().trim();
+            String email = edtEmail.getText().toString().trim();
+            String password = edtPassword.getText().toString().trim();
+            String parentPassword = edtParentPassword.getText().toString().trim();
+
+            FirebaseAuth parentAuth = FirebaseAuth.getInstance();
+            String parentUid = parentAuth.getCurrentUser().getUid();
+            String parentEmail = parentAuth.getCurrentUser().getEmail();
+
+            if (name.isEmpty() || birthdate.isEmpty() || email.isEmpty() || password.isEmpty() || parentPassword.isEmpty()) {
+                Toast.makeText(getContext(), "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Kiểm tra số dư nếu cần
+            if (childList.size() >= 1 && balance < CHILD_COST) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Cần nạp tiền")
+                        .setMessage("Bạn đã thêm 1 trẻ miễn phí. Để thêm trẻ tiếp theo, bạn cần nạp ít nhất " + CHILD_COST + " VNĐ. Bạn có muốn nạp tiền không?")
+                        .setPositiveButton("Nạp tiền", (d, which) -> {
+                            Intent intent = new Intent(getActivity(), DepositActivity.class);
+                            startActivityForResult(intent, REQUEST_NAP_TIEN);
+                        })
+                        .setNegativeButton("Hủy", null)
+                        .show();
+                return;
+            }
+
+            // Tạo FirebaseAuth tạm
+            FirebaseAuth tempAuth = FirebaseAuth.getInstance();
+            tempAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            String childUserId = task.getResult().getUser().getUid();
+                            String childId = dbRef.push().getKey();
+                            int age = calculateAgeFromBirthdate(birthdate);
+
+                            Child child = new Child(childId, name, age, gender, birthdate, address, "");
+                            child.setUserId(childUserId);
+
+                            // Upload hình nếu có
+                            if (selectedImageUri != null) {
+                                FirebaseStorage.getInstance().getReference("child_images")
+                                        .child(childId + ".jpg")
+                                        .putFile(selectedImageUri)
+                                        .addOnSuccessListener(taskSnapshot ->
+                                                taskSnapshot.getStorage().getDownloadUrl()
+                                                        .addOnSuccessListener(uri -> {
+                                                            child.setImageUrl(uri.toString());
+                                                            dbRef.child(childId).setValue(child);
+                                                        }));
+                            } else {
+                                dbRef.child(childId).setValue(child);
+                            }
+
+                            // Lưu thông tin vào bảng Users (role, email, parent)
+                            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
+                            HashMap<String, Object> childInfo = new HashMap<>();
+                            childInfo.put("email", email);
+                            childInfo.put("role", "child");
+                            childInfo.put("parent", parentUid);
+
+                            userRef.child(childUserId).setValue(childInfo);
+
+                            // Gắn vào danh sách children của parent
+                            userRef.child(parentUid).child("children").child(childUserId).setValue(true);
+
+                            // Trừ tiền nếu có
+                            if (childList.size() >= 1) {
+                                balance -= CHILD_COST;
+                                updateBalanceUI();
+                                Toast.makeText(getContext(), "Đã trừ " + CHILD_COST + " VNĐ để thêm trẻ.", Toast.LENGTH_SHORT).show();
+                            }
+
+                            // Đăng nhập lại tài khoản chính
+                            parentAuth.signInWithEmailAndPassword(parentEmail, parentPassword)
+                                    .addOnCompleteListener(signInTask -> {
+                                        if (signInTask.isSuccessful()) {
+                                            Toast.makeText(getContext(), "Tạo tài khoản trẻ thành công!", Toast.LENGTH_SHORT).show();
+                                            dialog.dismiss();
+                                        } else {
+                                            Toast.makeText(getContext(), "Không thể đăng nhập lại tài khoản phụ huynh!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+                        } else {
+                            Toast.makeText(getContext(), "Lỗi tạo tài khoản trẻ: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        });
     }
+
 
     private int calculateAgeFromBirthdate(String birthdate) {
         try {
