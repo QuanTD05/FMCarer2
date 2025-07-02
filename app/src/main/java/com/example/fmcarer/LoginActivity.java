@@ -2,6 +2,7 @@ package com.example.fmcarer;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
@@ -55,29 +56,31 @@ public class LoginActivity extends AppCompatActivity {
         txtForgot.setOnClickListener(v -> showForgotPasswordDialog());
 
         login.setOnClickListener(v -> {
-            ProgressDialog pd = new ProgressDialog(LoginActivity.this);
-            pd.setMessage("Đang kiểm tra thông tin...");
-            pd.setCancelable(false);
-            pd.show();
-
             String str_email = email.getText().toString().trim();
             String str_password = password.getText().toString().trim();
-
             int selectedId = roleGroup.getCheckedRadioButtonId();
+
+            if (TextUtils.isEmpty(str_email) || TextUtils.isEmpty(str_password)) {
+                Toast.makeText(this, "Vui lòng nhập đầy đủ email và mật khẩu!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             if (selectedId == -1) {
                 Toast.makeText(this, "Vui lòng chọn loại tài khoản!", Toast.LENGTH_SHORT).show();
-                pd.dismiss();
                 return;
             }
 
             RadioButton selectedRoleButton = findViewById(selectedId);
-            String userRole = selectedRoleButton.getTag().toString(); // staff hoặc user
+            String userRole = selectedRoleButton.getTag().toString(); // "main" hoặc "sub"
 
-            if (TextUtils.isEmpty(str_email) || TextUtils.isEmpty(str_password)) {
-                Toast.makeText(this, "Vui lòng nhập đầy đủ email và mật khẩu!", Toast.LENGTH_SHORT).show();
-                pd.dismiss();
-                return;
-            }
+            // Xoá SharedPreferences cũ
+            SharedPreferences preferences = getSharedPreferences("PREFS", MODE_PRIVATE);
+            preferences.edit().clear().apply();
+
+            ProgressDialog pd = new ProgressDialog(LoginActivity.this);
+            pd.setMessage("Đang kiểm tra thông tin...");
+            pd.setCancelable(false);
+            pd.show();
 
             login.setEnabled(false);
 
@@ -96,18 +99,20 @@ public class LoginActivity extends AppCompatActivity {
                                     if (snapshot.exists()) {
                                         String roleInDb = snapshot.child("role").getValue(String.class);
                                         if (roleInDb != null && roleInDb.equals(userRole)) {
-                                            // Đúng vai trò
+                                            Intent intent;
                                             if (userRole.equals("main")) {
-                                                startActivity(new Intent(LoginActivity.this, MainActivity3.class));
+                                                intent = new Intent(LoginActivity.this, MainActivity3.class);
                                             } else {
-                                                startActivity(new Intent(LoginActivity.this, SubMainActivity.class));
+                                                intent = new Intent(LoginActivity.this, SubMainActivity.class);
                                             }
+                                            startActivity(intent);
                                             finish();
                                         } else {
                                             auth.signOut();
                                             Toast.makeText(LoginActivity.this, "Sai loại tài khoản!", Toast.LENGTH_SHORT).show();
                                         }
                                     } else {
+                                        auth.signOut();
                                         Toast.makeText(LoginActivity.this, "Không tìm thấy thông tin người dùng!", Toast.LENGTH_SHORT).show();
                                     }
                                 }

@@ -1,90 +1,138 @@
 package com.example.fmcarer;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
-
+import android.widget.*;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.*;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class DepositActivity extends AppCompatActivity {
 
-    private EditText edtSoTien;
-    private Button btnNap;
+    private TextView txtPlanName, txtPlanDays, txtPlanPrice;
+    private Button btnConfirmPayment;
+    private FirebaseUser firebaseUser;
+
+    private int days = 0;
+    private int price = 0;
+    private String planName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deposit);
 
-        edtSoTien = findViewById(R.id.edtSoTien);
-        btnNap = findViewById(R.id.btnNap);
+        // Ánh xạ
+        txtPlanName = findViewById(R.id.txtPlanName);
+        txtPlanDays = findViewById(R.id.txtPlanDays);
+        txtPlanPrice = findViewById(R.id.txtPlanPrice);
+        btnConfirmPayment = findViewById(R.id.btnConfirmPayment);
 
-        btnNap.setOnClickListener(v -> {
-            String soTien = edtSoTien.getText().toString().trim();
-            if (soTien.isEmpty()) {
-                Toast.makeText(this, "Vui lòng nhập số tiền.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            int amount;
-            try {
-                amount = Integer.parseInt(soTien);
-            } catch (NumberFormatException e) {
-                Toast.makeText(this, "Số tiền không hợp lệ!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            if (amount <= 0) {
-                Toast.makeText(this, "Số tiền phải lớn hơn 0.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            saveToLocalWallet(amount);      // Lưu vào SharedPreferences
-            saveToAdminRevenue(amount);     // Lưu vào Firebase
-
-            Toast.makeText(this, "Nạp " + amount + " VNĐ thành công!", Toast.LENGTH_SHORT).show();
-
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("nap_thanh_cong", true);
-            resultIntent.putExtra("so_tien", amount);
-            setResult(Activity.RESULT_OK, resultIntent);
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser == null) {
+            Toast.makeText(this, "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
             finish();
+            return;
+        }
+
+        // Nhận dữ liệu từ Intent
+        planName = getIntent().getStringExtra("plan");
+        if (planName == null) {
+            Toast.makeText(this, "Không có dữ liệu gói", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        // Thiết lập số ngày & giá
+        switch (planName) {
+            case "1 ngày":
+                days = 1;
+                price = 10000;
+                break;
+            case "1 tuần":
+                days = 7;
+                price = 60000;
+                break;
+            case "1 tháng":
+                days = 30;
+                price = 200000;
+                break;
+            default:
+                days = 1;
+                price = 10000;
+                break;
+        }
+
+        // Hiển thị thông tin
+        txtPlanName.setText("Gói: " + planName);
+        txtPlanDays.setText("Sử dụng trong: " + days + " ngày");
+        txtPlanPrice.setText("Tổng tiền: " + price + " VNĐ");
+
+        // Xác nhận thanh toán
+        btnConfirmPayment.setOnClickListener(v -> confirmPayment());
+    }
+
+    private void confirmPayment() {
+        DatabaseReference userRef = FirebaseDatabase.getInstance()
+                .getReference("Users").child(firebaseUser.getUid());
+
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
+                long balance = 0, paidUntil = System.currentTimeMillis();
+
+                if (snapshot.child("balance").exists()) {
+                    balance = Long.parseLong(snapshot.child("balance").getValue(String.class));
+                }
+                if (snapshot.child("paidUntil").exists()) {
+                    long old = Long.parseLong(snapshot.child("paidUntil").getValue(String.class));
+                    paidUntil = Math.max(old, System.currentTimeMillis());
+                }
+
+                if (balance < price) {
+                    Toast.makeText(DepositActivity.this, "Không đủ số dư!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                long newBalance = balance - price;
+                long newPaidUntil = paidUntil + days * 86400000L; // 1 ngày = 86400000 ms
+
+                Map<String, Object> updates = new HashMap<>();
+                updates.put("balance", String.valueOf(newBalance));
+                updates.put("paidUntil", String.valueOf(newPaidUntil));
+
+                userRef.updateChildren(updates).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        saveTransaction(price, days);
+                        Toast.makeText(DepositActivity.this, "Thanh toán thành công!", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        Toast.makeText(DepositActivity.this, "Lỗi thanh toán!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(DepositActivity.this, "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
-    private void saveToLocalWallet(int amount) {
-        SharedPreferences prefs = getSharedPreferences("wallet", MODE_PRIVATE);
-        int currentBalance = prefs.getInt("balance", 0);
-        prefs.edit().putInt("balance", currentBalance + amount).apply();
-    }
+    private void saveTransaction(int amount, int days) {
+        DatabaseReference tRef = FirebaseDatabase.getInstance()
+                .getReference("TransactionHistories")
+                .child(firebaseUser.getUid())
+                .push();
 
-    private void saveToAdminRevenue(int amount) {
-        DatabaseReference paymentsRef = FirebaseDatabase.getInstance().getReference("payments");
-        String paymentId = paymentsRef.push().getKey();
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+        Map<String, Object> trans = new HashMap<>();
+        trans.put("amount", amount);
+        trans.put("days", days);
+        trans.put("timestamp", System.currentTimeMillis());
 
-        Map<String, Object> paymentData = new HashMap<>();
-        paymentData.put("userId", userId);
-        paymentData.put("amount", amount);
-        paymentData.put("timestamp", timestamp);
-
-        if (paymentId != null) {
-            paymentsRef.child(paymentId).setValue(paymentData);
-        }
+        tRef.setValue(trans);
     }
 }

@@ -74,6 +74,16 @@
             android:background="@android:color/transparent"
             android:textSize="16sp"
             android:textColor="#2C5079" />
+        <Spinner
+            android:id="@+id/spinnerShareLevel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@android:drawable/btn_dropdown"
+            android:entries="@array/share_levels"
+            android:padding="8dp"
+            android:textAlignment="center"/>
+
 
         <ImageView
             android:id="@+id/image_added"

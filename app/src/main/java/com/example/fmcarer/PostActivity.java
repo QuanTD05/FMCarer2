@@ -320,8 +320,7 @@
 //}
 
 
-
-
+// === PostActivity.java ===
 package com.example.fmcarer;
 
 import android.app.ProgressDialog;
@@ -335,6 +334,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -359,7 +359,6 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 
-
 public class PostActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -372,6 +371,7 @@ public class PostActivity extends AppCompatActivity {
     private ImageView close, image_added;
     private TextView post;
     private EditText description;
+    private Spinner spinnerShareLevel;
     private LinearLayout buttonSelectImage, buttonTakePhoto;
 
     @Override
@@ -391,16 +391,17 @@ public class PostActivity extends AppCompatActivity {
         description = findViewById(R.id.description);
         buttonSelectImage = findViewById(R.id.buttonSelectImage);
         buttonTakePhoto = findViewById(R.id.buttonTakePhoto);
+        spinnerShareLevel = findViewById(R.id.spinnerShareLevel);
 
         storageReference = FirebaseStorage.getInstance().getReference("posts");
 
-        // Set onClickListeners
         close.setOnClickListener(v -> startActivity(new Intent(PostActivity.this, MainActivity3.class)));
+
         post.setOnClickListener(v -> {
             if (imageUri != null) {
                 uploadImage();
             } else {
-                Toast.makeText(PostActivity.this, "Please select an image!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostActivity.this, "Vui lòng chọn ảnh!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -453,62 +454,61 @@ public class PostActivity extends AppCompatActivity {
 
     private void uploadImage() {
         ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Posting...");
+        progressDialog.setMessage("Đang đăng bài...");
         progressDialog.show();
 
         if (imageUri != null) {
             StorageReference fileReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
             uploadTask = fileReference.putFile(imageUri);
 
-            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    if (!task.isSuccessful()) {
-                        throw task.getException();
-                    }
-                    return fileReference.getDownloadUrl(); // Return the download URL task
+            uploadTask.continueWithTask(task -> {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
                 }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()) {
-                        Uri downloadUri = task.getResult();
-                        myUrl = downloadUri.toString();
-                        savePostToDatabase(myUrl);
-                        progressDialog.dismiss();
-                        startActivity(new Intent(PostActivity.this, MainActivity3.class));
-                        finish();
-                    } else {
-                        progressDialog.dismiss();
-                        Toast.makeText(PostActivity.this, "Failed to upload image!", Toast.LENGTH_SHORT).show();
-                    }
+                return fileReference.getDownloadUrl();
+            }).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = (Uri) task.getResult();
+                    myUrl = downloadUri.toString();
+                    savePostToDatabase(myUrl);
+                    progressDialog.dismiss();
+                    startActivity(new Intent(PostActivity.this, MainActivity3.class));
+                    finish();
+                } else {
+                    progressDialog.dismiss();
+                    Toast.makeText(PostActivity.this, "Lỗi khi tải ảnh!", Toast.LENGTH_SHORT).show();
                 }
             }).addOnFailureListener(e -> {
                 progressDialog.dismiss();
-                Toast.makeText(PostActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             });
         } else {
             progressDialog.dismiss();
-            Toast.makeText(this, "No Image Selected!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Chưa chọn ảnh!", Toast.LENGTH_SHORT).show();
         }
     }
-
 
     private void savePostToDatabase(String imageUrl) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
         String postid = reference.push().getKey();
+
+        String selectedLevel = spinnerShareLevel.getSelectedItem().toString();
+        String shareLevel = selectedLevel.equals("Gia đình") ? "family" : "community";
+        String status = shareLevel.equals("community") ? "pending" : "approved";
 
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("postid", postid);
         hashMap.put("postimage", imageUrl);
         hashMap.put("description", description.getText().toString());
         hashMap.put("publisher", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        hashMap.put("shareLevel", shareLevel);
+        hashMap.put("status", status);
 
         reference.child(postid).setValue(hashMap).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Toast.makeText(PostActivity.this, "Post uploaded successfully!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostActivity.this, "Đăng bài thành công!", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(PostActivity.this, "Failed to save post data.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostActivity.this, "Lỗi khi lưu dữ liệu.", Toast.LENGTH_SHORT).show();
             }
         });
     }

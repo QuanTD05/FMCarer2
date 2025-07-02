@@ -36,34 +36,7 @@
             android:backgroundTint="#90CAF9"
             android:textColorHint="#607D8B"
             android:inputType="date" />
-        <EditText
-            android:id="@+id/edtEmail"
-            android:hint="Email của trẻ"
-            android:inputType="textEmailAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
 
-            android:layout_marginBottom="12dp"
-            android:backgroundTint="#90CAF9"
-            android:textColorHint="#607D8B" />
-
-        <EditText
-            android:id="@+id/edtPassword"
-            android:hint="Mật khẩu"
-            android:inputType="textPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:backgroundTint="#90CAF9"
-            android:textColorHint="#607D8B"/>
-        <EditText
-            android:id="@+id/edtParentPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Mật khẩu tài khoản chính"
-            android:inputType="textPassword"
-            android:padding="8dp"
-            />
 
 
         <!-- Giới tính -->

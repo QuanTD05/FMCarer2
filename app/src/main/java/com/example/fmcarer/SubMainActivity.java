@@ -11,7 +11,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
-import com.example.fmcarer.Fragment.ProfileUserFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -30,12 +29,16 @@ public class SubMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub_main);
 
-        // Apply window insets for better system bar handling
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Gán profileid mặc định là tài khoản hiện tại
+        SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
+        editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        editor.apply();
 
         bottomNavigationView = findViewById(R.id.bottom_nav_menu);
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
@@ -43,45 +46,45 @@ public class SubMainActivity extends AppCompatActivity {
         Bundle intent = getIntent().getExtras();
         if (intent != null) {
             String publisher = intent.getString("publisherid");
-
-            SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
             editor.putString("profileid", publisher);
             editor.apply();
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new ProfileFragment()).commit();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new ProfileFragment())
+                    .commit();
         } else {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PostFragment()).commit();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new HomeFragment())
+                    .commit();
         }
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
+    private final BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                    // Get the selected menu item ID
-                    int id = menuItem.getItemId();
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    int id = item.getItemId();
 
-                    if (id == R.id.nav_cam) {
+                    if (id == R.id.nav_home) {
+                        selectedFragment = new HomeFragment();
+                    } else if (id == R.id.nav_search) {
+                        selectedFragment = new SearchFragment();
+                    } else if (id == R.id.nav_post) {
                         selectedFragment = new PostFragment();
-
-                    } else if (id == R.id.nav_notifications) {
+                    } else if (id == R.id.nav_heart) {
                         selectedFragment = new NotificationFragment();
                     } else if (id == R.id.nav_profile) {
                         SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
                         editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
                         editor.apply();
-                        selectedFragment = new ProfileUserFragment();
+                        selectedFragment = new ProfileFragment();
                     }
 
-                    // Replace fragment if not null
                     if (selectedFragment != null) {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, selectedFragment)
                                 .commit();
                     }
 
-                    // Always return true to indicate the event was handled
                     return true;
                 }
             };

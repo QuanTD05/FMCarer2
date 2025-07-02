@@ -175,6 +175,47 @@
                 android:backgroundTint="@color/blue_primary"
                 style="?android:attr/buttonStyleSmall" />
 
+            <!-- Thông tin số dư -->
+            <TextView
+                android:id="@+id/txtBalance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Số dư: -- VNĐ"
+                android:textColor="@color/blue_text"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:id="@+id/txtPaidUntil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hạn sử dụng: --"
+                android:textColor="@color/blue_text"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp" />
+
+            <Button
+                android:id="@+id/btnTopUp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Nạp tiền duy trì tài khoản"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/blue_primary"
+                style="?android:attr/buttonStyleSmall" />
+
+            <!-- Nút mới thêm vào ngay dưới -->
+            <Button
+                android:id="@+id/btnAddBalance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Nạp thêm vào số dư"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/blue_primary"
+                style="?android:attr/buttonStyleSmall" />
+
+
             <!-- Nút chọn ảnh bài viết hoặc đã lưu -->
             <LinearLayout
                 android:id="@+id/last_bar"

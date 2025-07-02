@@ -24,7 +24,7 @@
             app:itemIconTint="@color/colorAccent"
             app:labelVisibilityMode="unlabeled"
             android:background="@color/white"
-            app:menu="@menu/bottom_nav_menu"/>
+            app:menu="@menu/bottom_navigation"/>
     </com.google.android.material.appbar.AppBarLayout>
 
 </RelativeLayout>

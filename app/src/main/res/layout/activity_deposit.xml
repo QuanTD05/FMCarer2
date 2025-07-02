@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#F5F5F5"
+    android:background="#E3F2FD"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp">
@@ -9,65 +8,66 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:orientation="vertical">
 
-        <!-- Khung thẻ ngân hàng -->
-        <androidx.cardview.widget.CardView
+        <!-- Tiêu đề -->
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Xác nhận thanh toán"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#0D47A1"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Tên gói -->
+        <TextView
+            android:id="@+id/txtPlanName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="8dp"
-            android:background="#FFFFFF"
-            android:padding="24dp">
+            android:text="Gói: "
+            android:textSize="18sp"
+            android:textColor="#1A237E"
+            android:background="@drawable/info_background"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+        <!-- Số ngày sử dụng -->
+        <TextView
+            android:id="@+id/txtPlanDays"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sử dụng trong: "
+            android:textSize="18sp"
+            android:textColor="#1A237E"
+            android:background="@drawable/info_background"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="💰 Nạp tiền vào ví"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="#212121"
-                    android:layout_marginBottom="12dp" />
+        <!-- Giá tiền -->
+        <TextView
+            android:id="@+id/txtPlanPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tổng tiền: "
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#D84315"
+            android:background="@drawable/price_background"
+            android:padding="12dp"
+            android:layout_marginBottom="24dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Chọn số tiền cần nạp"
-                    android:textSize="16sp"
-                    android:textColor="#555555"
-                    android:layout_marginBottom="16dp" />
-
-                <EditText
-                    android:id="@+id/edtSoTien"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:hint="Nhập số tiền (VNĐ)"
-                    android:background="@drawable/bg_edittext"
-                    android:padding="12dp"
-                    android:textColor="#212121"
-                    android:textSize="16sp" />
-
-                <Button
-                    android:id="@+id/btnNap"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Nạp ngay"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="24dp"
-                    android:textColor="#FFFFFF"
-                    android:backgroundTint="#1976D2"
-                    android:drawableLeft="@drawable/ic_wallet" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        <!-- Nút thanh toán -->
+        <Button
+            android:id="@+id/btnConfirmPayment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Xác nhận Thanh toán"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:backgroundTint="@drawable/button_background"
+            android:padding="14dp"
+            android:layout_marginTop="16dp" />
     </LinearLayout>
 </ScrollView>

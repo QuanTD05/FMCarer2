@@ -38,7 +38,7 @@
                 android:id="@+id/settings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="🔔 Thông báo"
+                android:text="🔔 Lịch sử nạp tiền "
                 android:textSize="18sp"
                 android:textColor="#2C5079"
                 android:paddingVertical="12dp" />
@@ -49,9 +49,10 @@
                 android:background="#B0BEC5" />
 
             <TextView
+                android:id="@+id/Bank"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="📝 Bài viết"
+                android:text="📝 Quản lý thẻ ngân hàng"
                 android:textSize="18sp"
                 android:textColor="#2C5079"
                 android:paddingVertical="12dp" />
@@ -62,9 +63,10 @@
                 android:background="#B0BEC5" />
 
             <TextView
+                android:id="@+id/subbu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="📰 Tin"
+                android:text="📰 Quản lý tài khoản phụ"
                 android:textSize="18sp"
                 android:textColor="#2C5079"
                 android:paddingVertical="12dp" />

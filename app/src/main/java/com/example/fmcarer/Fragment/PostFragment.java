@@ -1,3 +1,4 @@
+// === PostFragment.java ===
 package com.example.fmcarer.Fragment;
 
 import android.content.Context;
@@ -19,11 +20,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +58,6 @@ public class PostFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_post, container, false);
 
-        // Initialize Firebase user and SharedPreferences for profile ID
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         SharedPreferences prefs = getContext().getSharedPreferences("PREFS", Context.MODE_PRIVATE);
         profileId = prefs.getString("profileid", "none");
@@ -85,20 +85,16 @@ public class PostFragment extends Fragment {
         storyAdapter = new StroryAdapter(getContext(), storyList);
         recyclerView_story.setAdapter(storyAdapter);
 
-        // Tải tất cả bài đăng mà KHÔNG lọc following
         readPosts();
-
-        // Tải stories
         readStory();
-
-        // Tải ảnh tài khoản
         loadUserInfo();
 
         return view;
     }
 
-    private void readPosts(){
+    private void readPosts() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -108,15 +104,17 @@ public class PostFragment extends Fragment {
                     Post post = snapshot1.getValue(Post.class);
                     if (post == null) continue;
 
-                    // Thêm tất cả bài đăng mà KHÔNG lọc following
-                    postLists.add(post);
+                    if ("family".equals(post.getShareLevel()) && post.getPublisher().equals(currentUserId)) {
+                        postLists.add(post);
+                    } else if ("community".equals(post.getShareLevel()) && "approved".equals(post.getStatus())) {
+                        postLists.add(post);
+                    }
                 }
                 postAdapted.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
@@ -140,7 +138,7 @@ public class PostFragment extends Fragment {
         });
     }
 
-    private void readStory(){
+    private void readStory() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Story");
 
         reference.addValueEventListener(new ValueEventListener() {
@@ -149,8 +147,7 @@ public class PostFragment extends Fragment {
                 long timecurrent = System.currentTimeMillis();
                 storyList.clear();
 
-                // Thêm dòng story của chính bạn nếu có
-                storyList.add(new Story("", 0, 0,"",
+                storyList.add(new Story("", 0, 0, "",
                         FirebaseAuth.getInstance().getCurrentUser().getUid()));
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -158,11 +155,11 @@ public class PostFragment extends Fragment {
                     Story story = null;
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         story = ds.getValue(Story.class);
-                        if (timecurrent > story.getTimestart() && timecurrent < story.getTimeend()) {
+                        if (story != null && timecurrent > story.getTimestart() && timecurrent < story.getTimeend()) {
                             countStory++;
                         }
                     }
-                    if (countStory > 0) {
+                    if (countStory > 0 && story != null) {
                         storyList.add(story);
                     }
                 }
@@ -171,7 +168,6 @@ public class PostFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
