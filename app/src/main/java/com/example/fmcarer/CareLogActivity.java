@@ -1,7 +1,11 @@
 package com.example.fmcarer;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class CareLogActivity extends AppCompatActivity {
@@ -35,20 +40,16 @@ public class CareLogActivity extends AppCompatActivity {
         logContainer = findViewById(R.id.logContainer);
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        // Nhận childId từ Intent
+        // Nhận childId từ Intent nếu có
         filterChildId = getIntent().getStringExtra("childId");
 
         loadChildrenAndReminders();
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Nhật ký chăm sóc");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> finish());
     }
 
     private void loadChildrenAndReminders() {
@@ -61,7 +62,6 @@ public class CareLogActivity extends AppCompatActivity {
                     Child child = snap.getValue(Child.class);
                     if (child != null) childList.add(child);
                 }
-
                 loadReminders();
             }
 
@@ -81,10 +81,8 @@ public class CareLogActivity extends AppCompatActivity {
                     Reminder reminder = snap.getValue(Reminder.class);
                     if (reminder == null) continue;
 
-                    // Lọc theo childId nếu được truyền vào
-                    if (filterChildId != null && !filterChildId.equals(reminder.childId)) {
-                        continue;
-                    }
+                    // Lọc theo childId nếu cần
+                    if (filterChildId != null && !filterChildId.equals(reminder.childId)) continue;
 
                     String childName = "Không rõ";
                     for (Child c : childList) {
@@ -94,6 +92,7 @@ public class CareLogActivity extends AppCompatActivity {
                         }
                     }
 
+                    // Hiển thị UI
                     LinearLayout card = new LinearLayout(CareLogActivity.this);
                     card.setOrientation(LinearLayout.VERTICAL);
                     card.setPadding(32, 32, 32, 32);
@@ -137,11 +136,47 @@ public class CareLogActivity extends AppCompatActivity {
                     card.addView(deleteBtn);
 
                     logContainer.addView(card);
+
+                    // 👇 TỰ ĐỘNG ĐẶT BÁO THỨC
+                    try {
+                        String[] parts = reminder.time.split(":");
+                        int hour = Integer.parseInt(parts[0].trim());
+                        int minute = Integer.parseInt(parts[1].trim());
+
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.HOUR_OF_DAY, hour);
+                        calendar.set(Calendar.MINUTE, minute);
+                        calendar.set(Calendar.SECOND, 0);
+                        calendar.set(Calendar.MILLISECOND, 0);
+
+                        // Nếu thời gian nhắc đã qua, thì bỏ qua
+                        if (calendar.getTimeInMillis() >= System.currentTimeMillis()) {
+                            setReminder(calendar, childName, reminder.title);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
         });
+    }
+
+    private void setReminder(Calendar time, String childName, String message) {
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.putExtra("child_name", childName);
+        intent.putExtra("message", message);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this,
+                (int) System.currentTimeMillis(),
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), pendingIntent);
     }
 }

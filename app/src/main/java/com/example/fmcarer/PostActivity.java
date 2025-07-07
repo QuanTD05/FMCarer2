@@ -319,7 +319,6 @@
 //    }
 //}
 
-
 // === PostActivity.java ===
 package com.example.fmcarer;
 
@@ -345,12 +344,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
@@ -489,28 +488,44 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void savePostToDatabase(String imageUrl) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
-        String postid = reference.push().getKey();
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        String selectedLevel = spinnerShareLevel.getSelectedItem().toString();
-        String shareLevel = selectedLevel.equals("Gia đình") ? "family" : "community";
-        String status = shareLevel.equals("community") ? "pending" : "approved";
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String userRole = snapshot.child("role").getValue(String.class);
+                if (userRole == null) userRole = "main"; // phòng trường hợp chưa có
 
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("postid", postid);
-        hashMap.put("postimage", imageUrl);
-        hashMap.put("description", description.getText().toString());
-        hashMap.put("publisher", FirebaseAuth.getInstance().getCurrentUser().getUid());
-        hashMap.put("shareLevel", shareLevel);
-        hashMap.put("status", status);
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+                String postid = reference.push().getKey();
 
-        reference.child(postid).setValue(hashMap).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(PostActivity.this, "Đăng bài thành công!", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(PostActivity.this, "Lỗi khi lưu dữ liệu.", Toast.LENGTH_SHORT).show();
+                String selectedLevel = spinnerShareLevel.getSelectedItem().toString();
+                String shareLevel = selectedLevel.equals("Gia đình") ? "family" : "community";
+                String status = shareLevel.equals("community") ? "pending" : "approved";
+
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("postid", postid);
+                hashMap.put("postimage", imageUrl);
+                hashMap.put("description", description.getText().toString());
+                hashMap.put("publisher", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                hashMap.put("shareLevel", shareLevel);
+                hashMap.put("status", status);
+                hashMap.put("userRole", userRole); // Lưu role vào post
+
+                reference.child(postid).setValue(hashMap).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(PostActivity.this, "Đăng bài thành công!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(PostActivity.this, "Lỗi khi lưu dữ liệu.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(PostActivity.this, "Lỗi khi lấy role!", Toast.LENGTH_SHORT).show();
             }
         });
     }
 }
-

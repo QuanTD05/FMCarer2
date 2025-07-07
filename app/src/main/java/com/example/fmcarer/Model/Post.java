@@ -1,4 +1,5 @@
 package com.example.fmcarer.Model;
+
 public class Post {
     private String postid;
     private String postimage;
@@ -6,6 +7,7 @@ public class Post {
     private String publisher;
     private String status; // approved / rejected / pending
     private String shareLevel; // family / community
+    private String userRole;  // Thêm mới: Vai trò của người đăng ("main" hoặc "sub")
 
     public Post() {}
 
@@ -27,4 +29,7 @@ public class Post {
 
     public String getShareLevel() { return shareLevel; }
     public void setShareLevel(String shareLevel) { this.shareLevel = shareLevel; }
+
+    public String getUserRole() { return userRole; }
+    public void setUserRole(String userRole) { this.userRole = userRole; }
 }

@@ -1,4 +1,3 @@
-// === PostFragment.java ===
 package com.example.fmcarer.Fragment;
 
 import android.content.Context;
@@ -18,6 +17,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.fmcarer.Adapter.PostAdapted;
+import com.example.fmcarer.Adapter.StroryAdapter;
+import com.example.fmcarer.Model.Post;
+import com.example.fmcarer.Model.Story;
+import com.example.fmcarer.Model.User;
+import com.example.fmcarer.PostActivity;
+import com.example.fmcarer.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,14 +34,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.example.fmcarer.Adapter.PostAdapted;
-import com.example.fmcarer.Adapter.StroryAdapter;
-import com.example.fmcarer.Model.Post;
-import com.example.fmcarer.Model.Story;
-import com.example.fmcarer.Model.User;
-import com.example.fmcarer.PostActivity;
-import com.example.fmcarer.R;
 
 public class PostFragment extends Fragment {
 
@@ -52,6 +50,8 @@ public class PostFragment extends Fragment {
     private RecyclerView recyclerView_story;
     private StroryAdapter storyAdapter;
     private List<Story> storyList;
+
+    private String currentUserRole = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,16 +85,34 @@ public class PostFragment extends Fragment {
         storyAdapter = new StroryAdapter(getContext(), storyList);
         recyclerView_story.setAdapter(storyAdapter);
 
-        readPosts();
+        loadUserRoleAndReadPosts();
         readStory();
         loadUserInfo();
 
         return view;
     }
 
+    private void loadUserRoleAndReadPosts() {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                if (user != null && user.getRole() != null) {
+                    currentUserRole = user.getRole();
+                }
+                readPosts();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
     private void readPosts() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
-        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String currentUserId = firebaseUser.getUid();
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -104,8 +122,14 @@ public class PostFragment extends Fragment {
                     Post post = snapshot1.getValue(Post.class);
                     if (post == null) continue;
 
-                    if ("family".equals(post.getShareLevel()) && post.getPublisher().equals(currentUserId)) {
-                        postLists.add(post);
+                    if ("family".equals(post.getShareLevel())) {
+                        if (post.getPublisher().equals(currentUserId)) {
+                            postLists.add(post);  // Bài của mình
+                        } else if ("main".equals(currentUserRole) && "main".equals(post.getUserRole())) {
+                            postLists.add(post);  // Tài khoản chính xem bài của tài khoản chính
+                        } else if ("sub".equals(currentUserRole) && "main".equals(post.getUserRole())) {
+                            postLists.add(post);  // Tài khoản phụ chỉ xem bài tài khoản chính
+                        }
                     } else if ("community".equals(post.getShareLevel()) && "approved".equals(post.getStatus())) {
                         postLists.add(post);
                     }

@@ -1,21 +1,22 @@
 package com.example.fmcarer;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DepositActivity extends AppCompatActivity {
 
     private TextView txtPlanName, txtPlanDays, txtPlanPrice;
-    private Button btnConfirmPayment;
+    private Button btnConfirmPayment, btnShowQR, btnConfirmManual;
+    private ImageView imgQRCode;
     private FirebaseUser firebaseUser;
 
     private int days = 0;
@@ -27,11 +28,14 @@ public class DepositActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deposit);
 
-        // Ánh xạ
+        // Ánh xạ view
         txtPlanName = findViewById(R.id.txtPlanName);
         txtPlanDays = findViewById(R.id.txtPlanDays);
         txtPlanPrice = findViewById(R.id.txtPlanPrice);
         btnConfirmPayment = findViewById(R.id.btnConfirmPayment);
+        btnShowQR = findViewById(R.id.btnShowQR);
+        btnConfirmManual = findViewById(R.id.btnConfirmManual);  // 👉 QUAN TRỌNG: Bổ sung dòng này
+        imgQRCode = findViewById(R.id.imgQRCode);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser == null) {
@@ -68,13 +72,33 @@ public class DepositActivity extends AppCompatActivity {
                 break;
         }
 
-        // Hiển thị thông tin
+        // Hiển thị thông tin gói
         txtPlanName.setText("Gói: " + planName);
         txtPlanDays.setText("Sử dụng trong: " + days + " ngày");
         txtPlanPrice.setText("Tổng tiền: " + price + " VNĐ");
 
-        // Xác nhận thanh toán
+        // Nút xác nhận thanh toán bằng số dư
         btnConfirmPayment.setOnClickListener(v -> confirmPayment());
+
+        // Nút tạo QR VietQR
+        btnShowQR.setOnClickListener(v -> {
+            String bankCode = "vcb";  // Mã ngân hàng
+            String accountNumber = "1035734330";  // Số tài khoản nhận
+            String description = "Nap tien goi " + planName;
+
+            String qrUrl = "https://img.vietqr.io/image/" + bankCode + "-" + accountNumber + "-compact.png"
+                    + "?amount=" + price + "&addInfo=" + Uri.encode(description);
+
+            Glide.with(this).load(qrUrl).into(imgQRCode);
+            imgQRCode.setVisibility(ImageView.VISIBLE);
+            btnConfirmManual.setVisibility(Button.VISIBLE);  // 👉 Hiện nút xác nhận
+        });
+
+        // Nút "Tôi đã chuyển khoản xong"
+        btnConfirmManual.setOnClickListener(v -> {
+            Toast.makeText(this, "Cảm ơn! Chúng tôi sẽ kiểm tra giao dịch của bạn.", Toast.LENGTH_LONG).show();
+            btnConfirmManual.setVisibility(Button.GONE);
+        });
     }
 
     private void confirmPayment() {
@@ -99,7 +123,7 @@ public class DepositActivity extends AppCompatActivity {
                 }
 
                 long newBalance = balance - price;
-                long newPaidUntil = paidUntil + days * 86400000L; // 1 ngày = 86400000 ms
+                long newPaidUntil = paidUntil + days * 86400000L;
 
                 Map<String, Object> updates = new HashMap<>();
                 updates.put("balance", String.valueOf(newBalance));

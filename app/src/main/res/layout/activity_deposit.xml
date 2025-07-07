@@ -58,16 +58,47 @@
             android:padding="12dp"
             android:layout_marginBottom="24dp" />
 
-        <!-- Nút thanh toán -->
+        <!-- Nút tạo QR -->
+        <Button
+            android:id="@+id/btnShowQR"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thanh toán qua VietQR"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/blue_primary"
+            android:textColor="#FFFFFF" />
+
+        <!-- QR Code -->
+        <ImageView
+            android:id="@+id/imgQRCode"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            android:scaleType="centerInside" />
+
+        <!-- Nút xác nhận đã chuyển -->
+        <Button
+            android:id="@+id/btnConfirmManual"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tôi đã chuyển khoản xong"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/blue_primary"
+            android:textColor="#FFFFFF"
+            android:visibility="gone" />
+
+        <!-- Nút thanh toán số dư -->
         <Button
             android:id="@+id/btnConfirmPayment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Xác nhận Thanh toán"
+            android:text="Xác nhận Thanh toán bằng số dư"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:backgroundTint="@drawable/button_background"
             android:padding="14dp"
             android:layout_marginTop="16dp" />
+
     </LinearLayout>
 </ScrollView>
