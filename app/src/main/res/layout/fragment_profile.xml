@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_blue"
+    android:background="@color/white"
     tools:context=".Fragment.ProfileFragment">
 
     <!-- AppBar -->
@@ -20,7 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/light_blue"
-            android:padding="8dp">
+            android:paddingHorizontal="16dp"
+            android:gravity="center_vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                     android:id="@+id/username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="@color/blue_text"
                     android:maxLines="1"
@@ -38,11 +38,11 @@
 
                 <ImageView
                     android:id="@+id/options"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="10dp"
                     android:src="@drawable/ic_caidat"
+                    android:tint="@color/blue_text"
                     android:contentDescription="Tùy chọn" />
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
@@ -54,13 +54,12 @@
         android:layout_height="match_parent"
         android:layout_below="@id/bar"
         android:fillViewport="true"
-        android:paddingBottom="8dp">
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
             <!-- Ảnh đại diện -->
             <de.hdodenhof.circleimageview.CircleImageView
@@ -116,52 +115,12 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Bài viết" />
+                        android:text="Bài viết"
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
-                <!-- Người theo dõi -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginHorizontal="16dp"
-                    android:gravity="center">
 
-                    <TextView
-                        android:id="@+id/followers"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/blue_text" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Người theo dõi" />
-                </LinearLayout>
-
-                <!-- Đang theo dõi -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginHorizontal="16dp"
-                    android:gravity="center">
-
-                    <TextView
-                        android:id="@+id/following"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/blue_text" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Đang theo dõi" />
-                </LinearLayout>
             </LinearLayout>
 
             <!-- Nút chỉnh sửa hồ sơ -->
@@ -170,10 +129,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:textColor="@color/white"
                 android:text="Chỉnh sửa hồ sơ"
-                android:backgroundTint="@color/blue_primary"
-                style="?android:attr/buttonStyleSmall" />
+                android:textColor="@color/white"
+                android:backgroundTint="#2196F3"
+                 />
 
             <!-- Thông tin số dư -->
             <TextView
@@ -201,10 +160,8 @@
                 android:layout_marginTop="12dp"
                 android:text="Nạp tiền duy trì tài khoản"
                 android:textColor="@color/white"
-                android:backgroundTint="@color/blue_primary"
-                style="?android:attr/buttonStyleSmall" />
+                android:backgroundTint="#2196F3" />
 
-            <!-- Nút mới thêm vào ngay dưới -->
             <Button
                 android:id="@+id/btnAddBalance"
                 android:layout_width="match_parent"
@@ -212,18 +169,17 @@
                 android:layout_marginTop="8dp"
                 android:text="Nạp thêm vào số dư"
                 android:textColor="@color/white"
-                android:backgroundTint="@color/blue_primary"
-                style="?android:attr/buttonStyleSmall" />
+                android:backgroundTint="#2196F3" />
 
-
-            <!-- Nút chọn ảnh bài viết hoặc đã lưu -->
+            <!-- Nút chọn ảnh -->
             <LinearLayout
                 android:id="@+id/last_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@color/blue_primary"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingVertical="8dp">
 
                 <ImageButton
                     android:id="@+id/my_fotos"
@@ -231,6 +187,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:src="@drawable/ic_grid"
+                    android:tint="@color/white"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="Bài viết" />
 
@@ -240,6 +197,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:src="@drawable/ic_save"
+                    android:tint="@color/white"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="Đã lưu" />
             </LinearLayout>

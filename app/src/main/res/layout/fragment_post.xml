@@ -17,16 +17,6 @@
         android:background="@android:color/white"
         android:elevation="4dp">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="56dp"
-            android:background="@android:color/white"
-            android:padding="8dp"
-            app:title="Bảng tin"
-            app:titleTextColor="#2C5079"
-            app:titleTextAppearance="@style/TextAppearance.AppCompat.Large"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Scrollable content -->

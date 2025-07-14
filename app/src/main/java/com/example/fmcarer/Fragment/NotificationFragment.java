@@ -73,11 +73,17 @@ public class NotificationFragment extends Fragment {
                     }
                 }
                 activityAdapter.notifyDataSetChanged();
+
+                // Auto hide RecyclerView if empty
+                if (activityList.isEmpty()) {
+                    activityRecycler.setVisibility(View.GONE);
+                } else {
+                    activityRecycler.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle error
             }
         });
     }
@@ -101,11 +107,17 @@ public class NotificationFragment extends Fragment {
                     }
                 }
                 reminderAdapter.notifyDataSetChanged();
+
+                // Auto hide RecyclerView if empty
+                if (reminderList.isEmpty()) {
+                    reminderRecycler.setVisibility(View.GONE);
+                } else {
+                    reminderRecycler.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle error
             }
         });
     }

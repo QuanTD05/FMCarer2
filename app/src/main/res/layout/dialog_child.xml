@@ -2,17 +2,17 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
-    android:background="#E3F2FD">
+    android:padding="16dp"
+    android:background="#F5F5F5">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
+        android:padding="20dp"
         android:background="@android:color/white"
-        android:elevation="3dp"
-        android:layout_margin="8dp"
+        android:elevation="4dp"
+        android:layout_margin="12dp"
         android:clipToPadding="false"
         android:backgroundTint="#FFFFFF">
 
@@ -22,9 +22,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Họ và tên"
-            android:layout_marginBottom="12dp"
-            android:backgroundTint="#90CAF9"
-            android:textColorHint="#607D8B" />
+            android:padding="12dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_edittext"
+            android:textColorHint="#757575" />
 
         <!-- Ngày sinh -->
         <EditText
@@ -32,12 +33,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Ngày sinh (dd/MM/yyyy)"
-            android:layout_marginBottom="12dp"
-            android:backgroundTint="#90CAF9"
-            android:textColorHint="#607D8B"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_edittext"
+            android:textColorHint="#757575"
             android:inputType="date" />
-
-
 
         <!-- Giới tính -->
         <EditText
@@ -45,9 +45,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Giới tính"
-            android:layout_marginBottom="12dp"
-            android:backgroundTint="#90CAF9"
-            android:textColorHint="#607D8B" />
+            android:padding="12dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_edittext"
+            android:textColorHint="#757575" />
 
         <!-- Địa chỉ -->
         <EditText
@@ -55,18 +56,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Địa chỉ"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="#90CAF9"
-            android:textColorHint="#607D8B"
+            android:padding="12dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/bg_edittext"
+            android:textColorHint="#757575"
             android:inputType="textPostalAddress" />
 
         <!-- Ảnh đại diện -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ảnh đại diện:"
+            android:text="Ảnh đại diện"
             android:textStyle="bold"
-            android:textColor="#2C5079"
+            android:textColor="#37474F"
+            android:textSize="16sp"
             android:layout_marginBottom="8dp" />
 
         <ImageView
@@ -75,11 +78,11 @@
             android:layout_height="200dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_grid"
-            android:contentDescription="Ảnh đại diện trẻ"
-            android:background="#CFD8DC"
+            android:contentDescription="Ảnh đại diện"
+            android:background="#ECEFF1"
             android:clickable="true"
             android:focusable="true"
-            android:layout_marginBottom="16dp"
-            android:foreground="?android:attr/selectableItemBackground" />
+            android:foreground="?attr/selectableItemBackground"
+            android:layout_marginBottom="16dp" />
     </LinearLayout>
 </ScrollView>

@@ -56,8 +56,7 @@ public class ProfileFragment extends Fragment {
         imageProfile = view.findViewById(R.id.image_profile);
         options = view.findViewById(R.id.options);
         posts = view.findViewById(R.id.posts);
-        followers = view.findViewById(R.id.followers);
-        following = view.findViewById(R.id.following);
+
         fullname = view.findViewById(R.id.fullname);
         bio = view.findViewById(R.id.bio);
         username = view.findViewById(R.id.username);

@@ -68,7 +68,7 @@ public class MainActivity3 extends AppCompatActivity {
                     .commit();
         } else {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new HomeFragment())
+                    .replace(R.id.fragment_container, new PostFragment())
                     .commit();
         }
     }
@@ -115,11 +115,11 @@ public class MainActivity3 extends AppCompatActivity {
                     int id = item.getItemId();
 
                     if (id == R.id.nav_home) {
-                        selectedFragment = new HomeFragment();
+                        selectedFragment = new PostFragment();
                     } else if (id == R.id.nav_search) {
                         selectedFragment = new SearchFragment();
                     } else if (id == R.id.nav_post) {
-                        selectedFragment = new PostFragment();
+                        selectedFragment = new HomeFragment();
                     } else if (id == R.id.nav_heart) {
                         selectedFragment = new NotificationFragment();
                     } else if (id == R.id.nav_profile) {

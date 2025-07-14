@@ -1,120 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/light_blue">
+    android:layout_margin="7dp"
+    card_view:cardCornerRadius="16dp"
+    card_view:cardElevation="6dp"
+    android:background="@color/white">
 
-    <!-- Nút More -->
-    <ImageView
-        android:id="@+id/more"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="15dp"
-        android:src="@drawable/ic_more" />
-
-    <!-- Nội dung chính -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="12dp">
 
-        <!-- Thông tin người dùng -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <!-- Header: Avatar + Username + More -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image_profile"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_margin="10dp"
-                android:src="@mipmap/ic_launcher" />
-
-            <TextView
-                android:id="@+id/username"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="username"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/blue_text" />
-        </LinearLayout>
+                android:orientation="horizontal">
 
-        <!-- Ảnh bài viết -->
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/image_profile"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:src="@mipmap/ic_launcher"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="username"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/blue_text"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="12dp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/more"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_more"
+                android:padding="4dp" />
+        </RelativeLayout>
+
+        <!-- Post Image -->
         <ImageView
             android:id="@+id/post_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher" />
+            android:layout_marginTop="12dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_cam" />
 
-        <!-- Hành động: like, comment, save -->
-        <RelativeLayout
+        <!-- Actions: Like - Comment - Save -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp">
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical">
 
             <ImageView
                 android:id="@+id/like"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_like" />
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_like"
+                android:layout_marginEnd="12dp" />
 
             <ImageView
                 android:id="@+id/comment"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_toEndOf="@id/like"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/ic_comment" />
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_comment"
+                android:layout_marginEnd="12dp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
 
             <ImageView
                 android:id="@+id/save"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:src="@drawable/ic_savee_black" />
-        </RelativeLayout>
+        </LinearLayout>
 
-        <!-- Thống kê và mô tả -->
+        <!-- Likes -->
         <TextView
             android:id="@+id/likes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="10 like"
+            android:text="10 likes"
             android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginTop="6dp"
             android:textColor="@color/blue_text" />
 
+        <!-- Publisher + Description -->
         <TextView
             android:id="@+id/publisher"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:text="username"
             android:textStyle="bold"
-            android:textColor="@color/blue_text" />
+            android:textColor="@color/blue_text"
+            android:layout_marginTop="4dp" />
 
         <TextView
             android:id="@+id/description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="description"
-            android:textStyle="bold"
-            android:textColor="@color/blue_text" />
+            android:text="This is a sample post description"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/black" />
 
+        <!-- View Comments -->
         <TextView
             android:id="@+id/comments"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
-            android:text="View All 20 Comment"
-            android:textStyle="bold"
-            android:textColor="@color/blue_dark" />
+            android:text="View all 20 comments"
+            android:textStyle="italic"
+            android:textSize="14sp"
+            android:textColor="@color/blue_dark"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="4dp" />
+
     </LinearLayout>
-</RelativeLayout>
+</androidx.cardview.widget.CardView>
